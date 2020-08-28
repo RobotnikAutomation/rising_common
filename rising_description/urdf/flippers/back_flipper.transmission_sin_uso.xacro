@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Flipper transmission -->
+	<xacro:macro name="back_flipper_transmission" params="prefix">
+	<!-- Transmission is important to link the joints and the controller -->
+		<transmission name="${prefix}back_flipper_joint_trans">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="${prefix}flipper_joint">
+				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			</joint>            
+			<actuator name="${prefix}flipper_motor_joint">      
+				<hardwareInterface>hardware_interface/PositionActuatorInterface</hardwareInterface> 
+				<mechanicalReduction>1</mechanicalReduction>
+				<!--motorTorqueConstant>20</motorTorqueConstant-->
+			</actuator>
+		</transmission>
+	</xacro:macro>
+
+</robot>

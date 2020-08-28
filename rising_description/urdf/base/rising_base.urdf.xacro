@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<robot name="base" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find rising_description)/urdf/inertia.urdf.xacro" />
+<xacro:include filename="$(find rising_description)/urdf/common.gazebo.xacro" />
+
+    <xacro:macro name="rising_base" params="prefix publish_bf hq">
+    <!--<xacro:property name="flippers_width" value="0.1"/> -->
+
+        <!-- Robot mechanical and motor parameters -->
+        <xacro:property name="PI" value="3.1415926535897931"/>
+
+        <xacro:property name="base_mass" value="50"/> <!-- in kg--> 
+        <xacro:property name="lenght_on_x" value="0.766"/>
+        <xacro:property name="lenght_on_y" value="0.45"/>
+        <xacro:property name="lenght_on_z" value="0.36"/>
+
+        <!-- BASE FOOTPRINT -->
+        <xacro:if value="${publish_bf}">
+            <link name="${prefix}base_footprint">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <geometry>
+                        <box size="0.001 0.001 0.001"/>
+                    </geometry>
+                </visual>
+            </link>
+            <joint name="${prefix}base_footprint_joint" type="fixed">
+                <!-- DUDA: Valores -->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <parent link="${prefix}base_footprint"/>
+                <child link="${prefix}base_link"/>
+            </joint> 
+        </xacro:if>
+
+        <!-- BASE_LINK -->
+        <link name="${prefix}base_link">
+            <inertial>
+                <mass value="${base_mass}"/>
+                <origin xyz="0 0 0.11"/>
+                <!-- DUDA: Valores -->
+                <solid_cuboid_inertia w="${lenght_on_x}" h="${lenght_on_y}" d="${lenght_on_z}" m="${base_mass}"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <xacro:if value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_base.dae"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:unless value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_base.stl"/>
+                    </geometry>
+                </xacro:unless>
+                <material name="dark_grey">
+			        <color rgba="0.4 0.4 0.4 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0 "/>
+		        <geometry>
+			        <mesh filename="package://rising_description/meshes/base/rising_base.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+    </xacro:macro>
+
+</robot>

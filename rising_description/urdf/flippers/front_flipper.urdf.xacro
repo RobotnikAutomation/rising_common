@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot name="front_flipper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find rising_description)/urdf/flippers/flipper.transmission.xacro"/>
+    <xacro:include filename="$(find rising_description)/urdf/flippers/front_flipper.gazebo.xacro"/>
+    <xacro:include filename="$(find rising_description)/urdf/inertia.urdf.xacro" />
+    <xacro:include filename="$(find rising_description)/urdf/wheels/wheel.urdf.xacro" />
+
+    <xacro:property name="M_PI" value="3.1415926535897931"/>
+    <!-- Flippers -->
+    <!-- TODO: Add the correct values -->
+	<xacro:property name="front_flipper_radius" value="0.98"/> 
+	<xacro:property name="front_flipper_height" value="0.196"/>
+    <xacro:property name="front_flipper_mass" value="8"/> <!-- in kg-->
+
+	<xacro:property name="lenght_on_x" value="0.43"/>
+	<xacro:property name="lenght_on_y" value="0.65"/>
+	<xacro:property name="lenght_on_z" value="0.196"/>
+
+	<xacro:property name="y_origin" value="0.274"/>
+
+    <xacro:macro name="front_flipper" params="prefix parent *origin hq">
+    
+        <joint name="${prefix}flipper_joint" type="continuous">
+            <parent link="${parent}"/>
+            <child link="${prefix}flipper_link"/>
+            <xacro:insert_block name="origin"/>
+            <axis xyz="0 1 0" rpy="0 0 0"/>
+            <limit effort="100" velocity="100"/>
+            <joint_properties damping="0.5" friction="0.5"/>
+        </joint>
+        
+        <link name="${prefix}flipper_link">
+            <visual>
+                <xacro:if value="${hq}">
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/flippers/front_flippers.dae"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:unless value="${hq}">
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <!-- change geometry if hq!=true -->
+                    <geometry>           
+                        <cylinder length="${front_flipper_height}" radius="${front_flipper_radius}"/>
+                    </geometry>      
+                </xacro:unless>
+            </visual>
+
+            <!--collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                   <mesh filename="package://rising_description/meshes/flippers/front_flippers.dae" />
+                    <!- - <cylinder length="${front_flipper_height}" radius="${front_flipper_radius}" />- ->
+                </geometry>
+            </collision-->
+
+            <inertial>
+                <mass value="${front_flipper_mass}"/>
+                <origin xyz="0.11 0 0"/>
+                <solid_cuboid_inertia  w="${lenght_on_x}" h="${lenght_on_y}" d="${lenght_on_z}" m="${front_flipper_mass}"/>
+                <!--<solid_cylinder_inertia  m="${front_flipper_mass}" r="${front_flipper_radius}" h="${front_flipper_height}"/-->
+            </inertial> 
+        </link>
+
+        <xacro:wheel prefix="${prefix}left_" parent="${prefix}flipper_link" y_origin="${y_origin}" reflect="false" hq="${hq}"/>
+
+        <xacro:wheel prefix="${prefix}right_" parent="${prefix}flipper_link" y_origin="-${y_origin}" reflect="false" hq="${hq}"/>
+
+        <xacro:flipper_transmission prefix="${prefix}"/>
+        <xacro:front_flipper_gazebo prefix="${prefix}"/>
+    
+    </xacro:macro>
+
+</robot>

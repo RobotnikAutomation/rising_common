@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot_id" default="robot"/>
+    <arg name="prefix" default="$(arg robot_id)_"/>
+    <arg name="robot_xacro" default="rising_std.urdf.xacro"/>
+
+    <!-- Load the URDF into ROS parameter server -->
+    <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find rising_description)/robots/$(arg robot_xacro)' prefix:=$(arg prefix)"/>
+    <param name="robot_description" command="$(arg urdf_file)"/>
+
+   <!-- publish tfs through the robot_state_publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+
+</launch>
