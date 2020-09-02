@@ -14,6 +14,5 @@
   <run_depend>ros_controllers</run_depend>
   <run_depend>ros_control</run_depend>
   <run_depend>robot_state_publisher</run_depend>
-  <run_depend>rising_pad</run_depend>
 
 </package>

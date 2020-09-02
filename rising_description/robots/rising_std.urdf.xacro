@@ -14,8 +14,15 @@
 	<xacro:include filename="$(find rising_description)/urdf/flippers/back_flipper.urdf.xacro" />
     <xacro:include filename="$(find rising_description)/urdf/flippers/front_flipper.urdf.xacro" />
 
-	<!-- Import all available sensors 
-	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />-->
+	<!--Import all available sensors --> 
+	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
+
+	 <!-- Include KINOVA GEN3 ARM -->
+	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_macro.xacro" />
+	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_transmission_macro.xacro" />
+
+	<!-- Include KINOVA GEN3 GRIPPER -->
+	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_macro.xacro" />
 
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
@@ -29,8 +36,25 @@
     <xacro:property name="publish_bf" value="true"/>
     <xacro:arg name="prefix" default="rising_"/>
 
+	<xacro:arg name="has_arm" default="true"/>
+	<xacro:arg name="has_gripper" default="true"/>
 
-    <xacro:macro name="rising" params="prefix publish_bf hq">
+
+    <xacro:property name="arm_position_x" value="0.0"/>
+    <xacro:property name="arm_position_y" value="0"/>
+    <xacro:property name="arm_position_z" value="0.1835"/>
+    <xacro:property name="arm_orientation_r" value="0"/>
+    <xacro:property name="arm_orientation_p" value="0"/>
+    <xacro:property name="arm_orientation_y" value="0"/>
+
+	<xacro:property name="gripper_position_x" value="0.0"/>
+    <xacro:property name="gripper_position_y" value="0"/>
+    <xacro:property name="gripper_position_z" value="0.3135"/>
+    <xacro:property name="gripper_orientation_r" value="0"/>
+    <xacro:property name="gripper_orientation_p" value="0"/>
+    <xacro:property name="gripper_orientation_y" value="0"/>
+
+    <xacro:macro name="rising" params="prefix publish_bf hq has_arm has_gripper">
 
 		<!-- *************** -->
 		<!-- Robots Elements -->
@@ -49,7 +73,29 @@
   			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
   		</xacro:back_flipper>
 
+ <!-- KINOVA GEN3 ARM -->
+        <xacro:if value="$(arg has_arm)"> 
+	        <xacro:load_arm prefix="$(arg prefix)arm_" dof="6" vision="180" parent="jiji">
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </xacro:load_arm>
+			        
+            <joint name="$(arg prefix)arm_base_joint" type="fixed">
+                <origin xyz="${arm_position_x} ${arm_position_y} ${arm_position_z}" rpy="${arm_orientation_r} ${arm_orientation_p} ${arm_orientation_y}"/>
+                <parent link="$(arg prefix)base_link" />
+                <child link="$(arg prefix)arm_base_link"/>
+            </joint>
+
+	        <xacro:load_gazebo_arm_transmissions prefix="$(arg prefix)arm_"/>
+        </xacro:if>
+
+<!-- KINOVA GEN3 GRIPPER -->
+        <xacro:if value="$(arg has_gripper)">
+            <xacro:load_gripper prefix="$(arg prefix)" parent="$(arg prefix)arm_end_effector_link">
+            </xacro:load_gripper>
+		</xacro:if>
+
    </xacro:macro>
+
 
    <!-- Gazebo ros control pluggins -->
    <xacro:ros_control/>
@@ -74,6 +120,6 @@
         <!--xacro:gazebo_colors prefix="$(arg prefix)"/-->
 
 
-   <xacro:rising prefix="$(arg prefix)" publish_bf="true" hq="true"/>
+   <xacro:rising prefix="$(arg prefix)" publish_bf="true" hq="true"  has_arm="true" has_gripper="true"/>
 
 </robot>

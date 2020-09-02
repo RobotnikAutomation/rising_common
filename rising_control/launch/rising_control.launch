@@ -8,16 +8,21 @@
   <arg name="flipper_base" default="$(optenv ROBOT_flipper_BASE 0.450)"/--> 
 
   <arg name="sim" default="false"/>
-  <!--<arg name="sim_arm_control" default="true"/> -->
+  <arg name="sim_arm_control" default="true"/>
+  <arg name="arm_controllers" default="robot_gen3_joint_trajectory_controller"/> <!-- controllers can be listed seprated by a blank space -->
+  <arg name="sim_gripper_control" default="false"/>
+  <arg name="gripper_controllers" default="gen3_lite_2f_gripper_controller"/> <!-- controllers can be listed seprated by a blank space -->
   <arg name="cmd_vel" default="robotnik_base_control/cmd_vel"/>
-
-  <!-- Simulation - Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find rising_control)/config/rising_control.yaml" command="load" subst_value="true"/>
-    
+   
   <!--param name="robotnik_base_control/flipper_diameter" value="$(arg flipper_diameter)"/>
   <param name="robotnik_base_control/flipper_base" value="$(arg flipper_base)"/>
   <param name="robotnik_base_control/track_width" value="$(arg track_width)"/-->
   <!-- load the controllers -->
+
+
+  <!-- Base control-->
+    <rosparam file="$(find rising_control)/config/rising_control.yaml" command="load" subst_value="true"/>
+
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
         args=" front_flipper_joint_controller
                front_left_master_wheel_joint_controller
@@ -28,6 +33,24 @@
                joint_read_state_controller
                joint_read_command_controller">
   </node>
+    
+  <!-- Arm and gripper control for simulation -->
+  <group if="$(arg sim)">
+
+    <group if="$(arg sim_arm_control)">
+
+      <rosparam file="$(find rising_control)/config/arm_control.yaml" command="load" subst_value="true"/>
+      <node name="controller_spawner_arm" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)"/>
+
+    </group>
+
+    <group if="$(arg sim_gripper_control)">
+
+      <rosparam file="$(find rising_control)/config/gripper_control.yaml" command="load" subst_value="true"/>
+      <node name="controller_spawner_gripper" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg gripper_controllers)"/>
+
+    </group>
+
 
   <!--node pkg="twist_mux" type="twist_mux" name="twist_mux">
     <rosparam command="load" file="$(find rising_control)/config/twist_mux.yaml" />
@@ -37,6 +60,7 @@
     <remap from="twist"  to="$(arg cmd_vel)"/>
     <remap from="marker" to="twist_marker"/>
   </node-->
+   </group>
 
 </launch>
 

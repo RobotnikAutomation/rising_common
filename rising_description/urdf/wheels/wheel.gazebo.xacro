@@ -3,11 +3,11 @@
 
     <xacro:macro name="wheel_gazebo" params="prefix">
         <gazebo reference="${prefix}_wheel_link">
-            <mu1 value="1.0"/>
-			<mu2 value="0.5"/>
-			<kp value="10000000.0" />
-			<kd value="1.0" />
-			<fdir1 value="1 0 0"/>
+            <mu1 value="10000"/>
+			      <mu2 value="10000"/>
+			      <kp value="10000000.0" />
+			      <kd value="1.0" />
+		      	<fdir1 value="1 0 0"/>
 			<material>Gazebo/Yellow</material>
             <turnGravityOff>false</turnGravityOff>
         </gazebo>
