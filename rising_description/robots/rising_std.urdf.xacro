@@ -100,15 +100,15 @@
 		</xacro:if>
 
 <!-- LIDAR -->
-        <sensor_rs_bpearl_lidar prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="1" range_max="150.0" hfov="360.0" hres="0.1" vfov="90.0" vres="2.0" fps="1.0" gpu="true" >
+        <xacro:sensor_rs_bpearl_lidar prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360.0" hres="0.3" vfov="90.0" vres="2.81" fps="15" gpu="true" >
            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
-        </sensor_rs_bpearl_lidar>
+        </xacro:sensor_rs_bpearl_lidar>
         <!--xacro:sensor_rplidar prefix="${prefix}rplidar" parent="${prefix}base_link" prefix_topic="front_laser" min_angle="3.14159" max_angle="-3.14159"  gpu="true">
            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
         </xacro:sensor_rplidar-->
-		<!--xacro:sensor_rs_bpearl_lidar2 prefix="${prefix}lidar" parent="${prefix}base_link" prefix_topic="lidar" gpu="false">
+		<!--xacro:sensor_rslidar_16 prefix="${prefix}lidar" parent="${prefix}base_link" prefix_topic="lidar" gpu="false">
            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
-        </xacro:sensor_rs_bpearl_lidar2-->
+        </xacro:sensor_rslidar_16-->
    </xacro:macro>
 
 
