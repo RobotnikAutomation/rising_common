@@ -66,6 +66,8 @@
             </collision>
         </link>
 
+       <xacro:gazebo_colors prefix="${prefix}"/>
+
     </xacro:macro>
 
 </robot>
