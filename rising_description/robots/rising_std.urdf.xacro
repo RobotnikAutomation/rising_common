@@ -6,9 +6,6 @@
 	<!-- ***************** -->
 	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
 
-	<!-- Import rising_platform -->
-    <!--xacro:include filename="$(find rising_description)/robots/rising_platform.urdf.xacro"/-->
-
 	<!-- Import flippers -->
 	<xacro:include filename="$(find rising_description)/urdf/base/rising_base.urdf.xacro" />
 	<xacro:include filename="$(find rising_description)/urdf/flippers/back_flipper.urdf.xacro" />
@@ -77,7 +74,7 @@
 
  <!-- KINOVA GEN3 ARM -->
         <xacro:if value="$(arg has_arm)"> 
-	        <xacro:load_arm prefix="$(arg prefix)arm_" dof="6" vision="180" parent="jiji">
+	        <xacro:load_arm prefix="$(arg prefix)arm_" dof="6" vision="180" parent="base_link">
                 <origin xyz="0 0 0" rpy="0 0 0"/>
             </xacro:load_arm>
 			        

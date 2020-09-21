@@ -13,12 +13,6 @@
   <arg name="sim_gripper_control" default="false"/>
   <arg name="gripper_controllers" default="gen3_lite_2f_gripper_controller"/> <!-- controllers can be listed seprated by a blank space -->
   <arg name="cmd_vel" default="robotnik_base_control/cmd_vel"/>
-   
-  <!--param name="robotnik_base_control/flipper_diameter" value="$(arg flipper_diameter)"/>
-  <param name="robotnik_base_control/flipper_base" value="$(arg flipper_base)"/>
-  <param name="robotnik_base_control/track_width" value="$(arg track_width)"/-->
-  <!-- load the controllers -->
-
 
   <!-- Base control-->
     <rosparam file="$(find rising_control)/config/rising_control.yaml" command="load" subst_value="true"/>
@@ -50,7 +44,6 @@
       <node name="controller_spawner_gripper" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg gripper_controllers)"/>
 
     </group>
-
 
   <!--node pkg="twist_mux" type="twist_mux" name="twist_mux">
     <rosparam command="load" file="$(find rising_control)/config/twist_mux.yaml" />

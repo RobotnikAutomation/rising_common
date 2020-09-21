@@ -15,17 +15,6 @@
             </actuator>
         </transmission>
 
-        <!--transmission name="${prefix}slave_wheel_joint_trans" params="prefix">
-            <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}slave_wheel_joint">
-                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-            </joint>
-            <actuator name="${prefix}slave_wheel_joint_motor">       
-				<mechanicalReduction>1</mechanicalReduction>
-				<motorTorqueConstant>20</motorTorqueConstant>
-            </actuator>
-        </transmission-->
-
     </xacro:macro>
 
 </robot>
