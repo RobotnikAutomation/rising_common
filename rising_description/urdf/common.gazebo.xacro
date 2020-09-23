@@ -14,13 +14,7 @@
    </xacro:macro>
    
    <xacro:macro name="gazebo_colors" params="prefix">
-		<gazebo reference="$(arg prefix)base_footprint">
-			<material>Gazebo/Green</material>
-		</gazebo>
-
 		<gazebo reference="$(arg prefix)base_link">
-			<!--material>Gazebo/Grey</material-->
-			<uri>file://media/materials/scripts/gazebo.material</uri>
 		    <material>Gazebo/Black</material>
 		</gazebo>
 	</xacro:macro> 

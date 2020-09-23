@@ -39,7 +39,6 @@
             <inertial>
                 <mass value="${base_mass}"/>
                 <origin xyz="0 0 0.11"/>
-                <!-- DUDA: Valores -->
                 <solid_cuboid_inertia w="${lenght_on_x}" h="${lenght_on_y}" d="${lenght_on_z}" m="${base_mass}"/>
             </inertial>
             <visual>
