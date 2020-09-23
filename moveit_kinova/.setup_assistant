@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: rising_description
+    relative_path: robots/rising_std.urdf.xacro
+    xacro_args: prefix:=robot_ has_arm:=true has_gripper:=true
+  SRDF:
+    relative_path: config/rising.srdf
+  CONFIG:
+    author_name: Cristina Lagarde
+    author_email: clagarde@robtonik.es
+    generated_timestamp: 1600859999
