@@ -1,6 +1,6 @@
-robot_gen3_lite_2f_gripper_controller:
+gen3_lite_2f_gripper_controller:
     type: position_controllers/GripperActionController
-    joint: $(arg prefix)gripper_right_finger_bottom_joint
+    joint: $(arg prefix)right_finger_bottom_joint
     action_monitor_rate: 100
 
 gazebo_ros_control:

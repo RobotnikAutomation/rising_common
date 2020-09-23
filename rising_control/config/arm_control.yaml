@@ -1,4 +1,4 @@
-robot_gen3_joint_trajectory_controller:
+gen3_joint_trajectory_controller:
     type: effort_controllers/JointTrajectoryController
     joints:
         - $(arg prefix)arm_joint_1
