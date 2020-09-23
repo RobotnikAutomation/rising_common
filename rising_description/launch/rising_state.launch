@@ -5,8 +5,8 @@
     <arg name="prefix" default="$(arg robot_id)_"/>
     <arg name="robot_xacro" default="rising_std.urdf.xacro"/>
 
-    <arg name="has_arm" default="true"/>
-    <arg name="has_gripper" default="true"/>
+    <arg name="has_arm" default="false"/>
+    <arg name="has_gripper" default="false"/>
 
     <!-- Load the URDF into ROS parameter server -->
     <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find rising_description)/robots/$(arg robot_xacro)' prefix:=$(arg prefix) has_arm:=$(arg has_arm) has_gripper:=$(arg has_gripper)"/>
