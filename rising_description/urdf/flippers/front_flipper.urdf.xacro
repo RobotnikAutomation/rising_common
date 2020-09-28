@@ -8,7 +8,6 @@
 
     <xacro:property name="M_PI" value="3.1415926535897931"/>
     <!-- Flippers -->
-    <!-- TODO: Add the correct values -->
 	<xacro:property name="front_flipper_radius" value="0.98"/> 
 	<xacro:property name="front_flipper_height" value="0.196"/>
     <xacro:property name="front_flipper_mass" value="8"/> <!-- in kg-->
@@ -73,7 +72,6 @@
                 <mass value="${front_flipper_mass}"/>
                 <origin xyz="0.11 0 0"/>
                 <solid_cuboid_inertia  w="${lenght_on_x}" h="${lenght_on_y}" d="${lenght_on_z}" m="${front_flipper_mass}"/>
-                <!--<solid_cylinder_inertia  m="${front_flipper_mass}" r="${front_flipper_radius}" h="${front_flipper_height}"/-->
             </inertial> 
         </link>
 

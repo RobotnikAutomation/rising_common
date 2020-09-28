@@ -8,7 +8,6 @@
 
     <xacro:property name="M_PI" value="3.1415926535897931"/>
     <!-- Wheels -->
-    <!-- TODO: Add the correct values -->
 	<xacro:property name="master_wheel_radius" value="0.1"/> 
 	<xacro:property name="master_wheel_height" value="0.06"/>
   <xacro:property name="master_wheel_mass" value="1"/><!-- in kg-->
