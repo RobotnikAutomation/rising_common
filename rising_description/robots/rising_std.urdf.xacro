@@ -6,6 +6,8 @@
 	<!-- ***************** -->
 	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
 
+    <xacro:include filename="$(find rising_description)/urdf/common.gazebo.xacro" />
+
 	<!-- Import flippers -->
 	<xacro:include filename="$(find rising_description)/urdf/base/rising_base.urdf.xacro" />
 	<xacro:include filename="$(find rising_description)/urdf/flippers/back_flipper.urdf.xacro" />
@@ -96,7 +98,7 @@
 		</xacro:if>
 
 <!-- LIDAR -->
-        <xacro:sensor_rs_bpearl prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="true" >
+        <xacro:sensor_rs_bpearl prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
         </xacro:sensor_rs_bpearl>
 

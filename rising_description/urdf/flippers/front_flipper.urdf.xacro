@@ -34,7 +34,7 @@
                 <xacro:if value="${hq}">
                     <origin xyz="0 0 0" rpy="0 0 0"/>
                     <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/front_flippers.dae"/>
+                        <mesh filename="package://rising_description/meshes/flippers/front_flippers_final.dae"/>
                     </geometry>
                 </xacro:if>
                 <xacro:unless value="${hq}">
@@ -50,7 +50,7 @@
               <xacro:if value="${hq}">
                     <origin xyz="0 0 0" rpy="0 0 0"/>
                     <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/collision_front_flippers.dae" scale="0.001 0.001 0.001"/>
+                        <mesh filename="package://rising_description/meshes/flippers/collision_front_flippers_final.dae" scale="0.001 0.001 0.001"/>
                     </geometry>
                 </xacro:if>
                 <xacro:unless value="${hq}">

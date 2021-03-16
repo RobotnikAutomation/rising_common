@@ -34,7 +34,7 @@
                 <xacro:if value="${hq}">
                     <origin xyz="0 0 0" rpy="0 0 0"/>
                     <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/back_flippers.dae"/>
+                        <mesh filename="package://rising_description/meshes/flippers/back_flippers_final.dae"/>
                     </geometry>
                 </xacro:if>
                 <xacro:unless value="${hq}">
@@ -48,13 +48,13 @@
 
             <collision>
                   <xacro:if value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <origin xyz="-0.13688 0 0" rpy="${M_PI/2} 0 0"/>
                     <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/collision_back_flippers.dae" scale="0.001 0.001 0.001"/>
+                        <mesh filename="package://rising_description/meshes/flippers/collision_back_flippers_final.dae" scale="0.001 0.001 0.001"/>
                     </geometry>
                 </xacro:if>
                 <xacro:unless value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <origin xyz="-0.13688 0 0" rpy="${M_PI/2} 0 0"/>
                     <!-- change geometry if hq!=true -->
                     <geometry>           
                         <cylinder length="${back_flipper_height}" radius="${back_flipper_radius}"/>
