@@ -16,21 +16,20 @@
 	<!--Import all available sensors --> 
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
 
-	 <!-- Include KINOVA GEN3 ARM -->
-	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_macro.xacro" />
-	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_transmission_macro.xacro" />
+	<!-- Import kinova arm -->
+	<xacro:include filename="$(find rising_description)/urdf/arm/kinova/gen3_macro.xacro" />
+	<xacro:include filename="$(find rising_description)/urdf/arm/kinova/gen3_transmission_macro.xacro" />
 
 	<!-- Include KINOVA GEN3 GRIPPER -->
 	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_macro.xacro" />
 	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_transmission_macro.xacro" />
 
-
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
 	<!-- Flipper parameters -->
-	<xacro:property name="flipper_offset_x" value="0.27455" />    <!-- x,y,z in translation from base_link to the center of the flippers -->
+	<xacro:property name="flipper_offset_x" value="0.325" />    <!-- x,y,z in translation from base_link to the center of the flippers -->
     <xacro:property name="flipper_offset_y" value="0.0" />
-	<xacro:property name="flipper_offset_z" value="0.00" /> 
+	<xacro:property name="flipper_offset_z" value="0.0" /> 
 
 	<!-- Flag to select the high or low quality model -->
 	<xacro:property name="hq" value="true" />
@@ -38,7 +37,6 @@
     <xacro:arg name="prefix" default="rising_"/>
 	<xacro:arg name="has_arm" default="false"/>
 	<xacro:arg name="has_gripper" default="true"/>
-
 
     <xacro:property name="arm_position_x" value="0.0"/>
     <xacro:property name="arm_position_y" value="0"/>
@@ -65,68 +63,50 @@
 		<!-- Rising base -->
 		<xacro:rising_base prefix="$(arg prefix)" publish_bf="${publish_bf}" hq="${hq}" />
 
-  		<xacro:front_flipper prefix="$(arg prefix)front_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
+        <!-- Flippers -->
+  		<xacro:front_flipper prefix="$(arg prefix)front_" parent="$(arg prefix)base_link">
+  			<origin xyz="${flipper_offset_x} ${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
+  			<!--origin xyz="1 1 1" rpy="0 0 0"/-->
   		</xacro:front_flipper>
 
-  		<xacro:back_flipper prefix="$(arg prefix)back_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
+  		<xacro:back_flipper prefix="$(arg prefix)back_" parent="$(arg prefix)base_link">
+  			<origin xyz="-${flipper_offset_x} ${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
   		</xacro:back_flipper>
 
- <!-- KINOVA GEN3 ARM -->
+        <!-- Arm -->
         <xacro:if value="${has_arm}"> 
 	        <xacro:load_arm prefix="${prefix}arm_" dof="6" vision="180" parent="${prefix}base_link">
                 <origin xyz="0 0 0" rpy="0 0 0"/>
             </xacro:load_arm>
-			        
+	          
             <joint name="${prefix}arm_base_joint" type="fixed">
                 <origin xyz="${arm_position_x} ${arm_position_y} ${arm_position_z}" rpy="${arm_orientation_r} ${arm_orientation_p} ${arm_orientation_y}"/>
                 <parent link="${prefix}base_link" />
                 <child link="${prefix}arm_base_link"/>
             </joint>
-
-	        <xacro:load_gazebo_arm_transmissions prefix="${prefix}arm_"/>
+    
+            <xacro:load_gazebo_arm_transmissions prefix="${prefix}arm_"/>
         </xacro:if>
 
-<!-- KINOVA GEN3 GRIPPER -->
-        <xacro:if value="${has_gripper}">
+        <!-- Gripper -->
+        <!--xacro:if value="${has_gripper}">
             <xacro:load_gripper prefix="${prefix}" parent="${prefix}arm_end_effector_link">
             </xacro:load_gripper>
-
-        <xacro:load_gazebo_gripper_transmissions prefix="${prefix}"/>
-
-		</xacro:if>
-
-<!-- LIDAR -->
-        <xacro:sensor_rs_bpearl prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
-           <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
+    
+            <xacro:load_gazebo_gripper_transmissions prefix="${prefix}"/>
+    
+	    </xacro:if-->
+    
+        <!-- Sensors -->
+        <xacro:sensor_rs_bpearl prefix="${prefix}rsbpearl" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
+            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
         </xacro:sensor_rs_bpearl>
 
-   </xacro:macro>
+    </xacro:macro>
 
 
    <!-- Gazebo ros control pluggins -->
    <xacro:ros_control/>
-
-	<!--xacro:if value="$(arg ros_planar_move_plugin)">
-
-		<xacro:if value="$(arg omni_wheels)">
-			<xacro:omni_steering prefix="$(arg prefix)" publish_tf="true"/>
-		</xacro:if>
-
-		<xacro:unless value="$(arg omni_wheels)">
-			<xacro:skid_steering prefix="$(arg prefix)" publish_tf="true"/>
-		</xacro:unless>
-
-	</xacro:if> -->
-	        <!-- ************** -->
-        <!-- GAZEBO PLUGINS -->
-        <!-- ************** -->
-        <!-- Gazebo ros control pluggins >
-        <xacro:ros_control/-->
-
-        <!--xacro:gazebo_colors prefix="$(arg prefix)"/-->
-
 
    <xacro:rising prefix="$(arg prefix)" publish_bf="true" hq="true"  has_arm="$(arg has_arm)" has_gripper="$(arg has_gripper)"/>
 
