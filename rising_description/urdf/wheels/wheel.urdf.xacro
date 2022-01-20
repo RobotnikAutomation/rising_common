@@ -1,201 +1,283 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="$(find rising_description)/urdf/wheels/wheel.transmission.xacro"/>
-    <xacro:include filename="$(find rising_description)/urdf/wheels/wheel.gazebo.xacro"/>
-    <xacro:include filename="$(find rising_description)/urdf/inertia.urdf.xacro" />
+  <xacro:include filename="$(find rising_description)/urdf/wheels/wheel.transmission.xacro"/>
+  <xacro:include filename="$(find rising_description)/urdf/wheels/wheel.gazebo.xacro"/>
+  <xacro:include filename="$(find rising_description)/urdf/inertia.urdf.xacro" />
 
-
-    <xacro:property name="M_PI" value="3.1415926535897931"/>
-    <!-- Wheels -->
-	<xacro:property name="master_wheel_radius" value="0.1"/> 
-	<xacro:property name="master_wheel_height" value="0.06"/>
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+  
+  <!-- Pulleys -->
+	<xacro:property name="master_wheel_radius" value="0.09256"/> 
+	<xacro:property name="master_wheel_width" value="0.047"/>
   <xacro:property name="master_wheel_mass" value="1"/><!-- in kg-->
 
-  <xacro:property name="slave_wheel_radius" value="0.06"/> 
-	<xacro:property name="slave_wheel_height" value="0.06"/>
-  <xacro:property name="slave_wheel_mass" value="0.5"/> <!-- in kg-->
+  <xacro:property name="slave_wheel2345_radius" value="0.04148"/> 
+	<xacro:property name="slave_wheel2345_height" value="0.047"/>
+  <xacro:property name="slave_wheel2345_mass" value="0.5"/> <!-- in kg-->
 
-  <xacro:property name="small_wheel_radius" value="0.01"/> 
-	<xacro:property name="small_wheel_height" value="0.06"/>
-  <xacro:property name="small_wheel_mass" value="0.1"/> <!-- in kg-->
+  <xacro:property name="slave_wheel6_radius" value="0.053205"/> 
+	<xacro:property name="slave_wheel6_height" value="0.047"/>
+  <xacro:property name="slave_wheel6_mass" value="0.1"/> <!-- in kg-->
 
- 	<xacro:property name="multiplier" value="1.0"/>
+ 	<xacro:property name="multiplier_mid_wheel" value="${master_wheel_radius/slave_wheel6_radius}"/>
+  <xacro:property name="multiplier_small_wheel" value="${master_wheel_radius/slave_wheel2345_radius}"/>
 
+  <xacro:macro name="wheel" params="prefix parent y_origin reflect">
+    <joint name="${prefix}master_wheel_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}master_wheel_link"/>
+      <origin xyz="0 ${y_origin} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-    <xacro:macro name="wheel" params="prefix parent y_origin reflect hq">
-        <joint name="${prefix}master_wheel_joint" type="continuous">
-            <parent link="${parent}"/>
-            <child link="${prefix}master_wheel_link"/>
-            <origin xyz="0 ${y_origin} 0" rpy="0 0 0"/>
-            <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="100"/>
-            <joint_properties damping="0.0" friction="0.0"/>
-        </joint>
+    <!-- R1: First link is concentric to the flipper rotation axis -->
+    <link name="${prefix}master_wheel_link">
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${master_wheel_width}" radius="${master_wheel_radius}" />
+        </geometry>
+      </collision-->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/master_pulley.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/master_pulley.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${master_wheel_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${master_wheel_mass}" r="${master_wheel_radius}" h="${master_wheel_width}"/>
+      </inertial>
+    </link>
 
-        <link name="${prefix}master_wheel_link">
-            <!--visual>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${master_wheel_height}" radius="${master_wheel_radius}" />
-              </geometry>
-            </visual-->     
-            <collision>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${master_wheel_height}" radius="${master_wheel_radius}" />
-              </geometry>
-            </collision>
-            <inertial>
-              <mass value="${master_wheel_mass}"/>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <solid_cylinder_inertia  m="${master_wheel_mass}" r="${master_wheel_radius}" h="${master_wheel_height}"/>
-            </inertial>
-        </link>
+    <joint name="${prefix}small_wheel_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}slave_wheel_link"/>
+      <xacro:if value="${reflect}">
+        <origin xyz="0.08227 ${y_origin} -0.08227" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:unless value="${reflect}">
+        <origin xyz="-0.08227 ${y_origin} -0.08227" rpy="0 0 0"/>
+      </xacro:unless>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-        <joint name="${prefix}slave_wheel_joint" type="continuous">
-            <parent link="${parent}"/>
-            <child link="${prefix}slave_wheel_link"/>
-            <xacro:if value="${reflect}">
-              <origin xyz="-0.25387 ${y_origin} -0.04" rpy="0 0 0"/>
-            </xacro:if>
-            <xacro:unless value="${reflect}">
-              <origin xyz="0.25387 ${y_origin} -0.04" rpy="0 0 0"/>
-            </xacro:unless>
-            <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="100"/>
-            <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier}" offset="0" />
-            <joint_properties damping="0.0" friction="0.0"/>
-        </joint>
+    <!-- R2: Second link is the down-inside pulley -->
+    <link name="${prefix}slave_wheel_link"> 
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </visual>
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${slave_wheel2345_height}" radius="${slave_wheel2345_radius}" />
+        </geometry>
+      </collision-->
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${slave_wheel2345_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${slave_wheel2345_mass}" r="${slave_wheel2345_radius}" h="${slave_wheel2345_height}"/>
+      </inertial>
+    </link>
 
-        <link name="${prefix}slave_wheel_link">
-            <!--visual>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${slave_wheel_height}" radius="${slave_wheel_radius}" />
-              </geometry>
-            </visual-->     
-            <collision>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${slave_wheel_height}" radius="${slave_wheel_radius}" />
-              </geometry>
-            </collision>
-            <inertial>
-              <mass value="${slave_wheel_mass}"/>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <solid_cylinder_inertia  m="${slave_wheel_mass}" r="${slave_wheel_radius}" h="${slave_wheel_height}"/>
-            </inertial>
-        </link>
+    <joint name="${prefix}small_wheel_1_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}small_wheel_1_link"/>
+      <xacro:if value="${reflect}">
+        <origin xyz="0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:unless value="${reflect}">
+        <origin xyz="-0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:unless>            
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-        <joint name="${prefix}small_wheel_1_joint" type="continuous">
-            <parent link="${parent}"/>
-            <child link="${prefix}small_wheel_1_link"/>
-            <xacro:if value="${reflect}">
-              <origin xyz="-0.14135 ${y_origin} 0.049" rpy="0 0 0"/>
-            </xacro:if>
-            <xacro:unless value="${reflect}">
-              <origin xyz="0.14135 ${y_origin} 0.049" rpy="0 0 0"/>
-            </xacro:unless>            
-            <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="100"/>
-            <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier}" offset="0" />
-            <joint_properties damping="0.0" friction="0.0"/>
-        </joint>
+    <!-- R3: Third link is the second down-inside pulley -->
+    <link name="${prefix}small_wheel_1_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </visual>
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${slave_wheel2345_height}" radius="${slave_wheel2345_radius}" />
+        </geometry>
+      </collision-->
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${slave_wheel2345_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${slave_wheel2345_mass}" r="${slave_wheel2345_radius}" h="${slave_wheel2345_height}"/>
+      </inertial>
+    </link>
 
-        <link name="${prefix}small_wheel_1_link">
-            <!--visual>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </visual-->     
-            <collision>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </collision>
-            <inertial>
-              <mass value="${small_wheel_mass}"/>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <solid_cylinder_inertia  m="${small_wheel_mass}" r="${small_wheel_radius}" h="${small_wheel_height}"/>
-            </inertial>
-        </link>
+    <joint name="${prefix}small_wheel_2_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}small_wheel_2_link"/>
+      <xacro:if value="${reflect}">
+        <origin xyz="-0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:unless value="${reflect}">
+        <origin xyz="0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:unless>            
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-        <joint name="${prefix}small_wheel_2_joint" type="continuous">
-            <parent link="${parent}"/>
-            <child link="${prefix}small_wheel_2_link"/>
-            <xacro:if value="${reflect}">
-              <origin xyz="-0.09 ${y_origin} 0.0639" rpy="0 0 0"/>
-            </xacro:if>
-            <xacro:unless value="${reflect}">
-              <origin xyz="0.09 ${y_origin} 0.0639" rpy="0 0 0"/>
-            </xacro:unless>            
-            <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="100"/>
-            <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier}" offset="0" />
-            <joint_properties damping="0.0" friction="0.0"/>
-        </joint>
+    <!-- R4: Forth link is the third down-inside pulley -->
+    <link name="${prefix}small_wheel_2_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </collision>
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${slave_wheel2345_height}" radius="${slave_wheel2345_radius}" />
+        </geometry>
+      </collision-->
+      <inertial>
+        <mass value="${slave_wheel2345_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${slave_wheel2345_mass}" r="${slave_wheel2345_radius}" h="${slave_wheel2345_height}"/>
+      </inertial>
+    </link>
 
-        <link name="${prefix}small_wheel_2_link">
-            <!--visual>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </visual-->     
-            <collision>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </collision>
-            <inertial>
-              <mass value="${small_wheel_mass}"/>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <solid_cylinder_inertia  m="${small_wheel_mass}" r="${small_wheel_radius}" h="${small_wheel_height}"/>
-            </inertial>
-        </link>
+    <joint name="${prefix}small_wheel_3_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}small_wheel_3_link"/>
+      <xacro:if value="${reflect}">
+        <origin xyz="-0.09 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:unless value="${reflect}">
+        <origin xyz="0.09 ${y_origin} -0.11242" rpy="0 0 0"/>
+      </xacro:unless>            
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-        <joint name="${prefix}small_wheel_3_joint" type="continuous">
-            <parent link="${parent}"/>
-            <child link="${prefix}small_wheel_3_link"/>
-            <xacro:if value="${reflect}">
-              <origin xyz="-0.19 ${y_origin} 0.0315" rpy="0 0 0"/>
-            </xacro:if>
-            <xacro:unless value="${reflect}">
-              <origin xyz="0.19 ${y_origin} 0.0315" rpy="0 0 0"/>
-            </xacro:unless>            
-            <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="100"/>
-            <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier}" offset="0" />
-            <joint_properties damping="0.0" friction="0.0"/>
-        </joint>
+    <!-- R5: Fifth link is the forth down-inside pulley -->
+    <link name="${prefix}small_wheel_3_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/small_pulley.stl"/>
+        </geometry>
+      </collision>
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${slave_wheel2345_height}" radius="${slave_wheel2345_radius}" />
+        </geometry>
+      </collision-->
+      <inertial>
+        <mass value="${slave_wheel2345_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${slave_wheel2345_mass}" r="${slave_wheel2345_radius}" h="${slave_wheel2345_height}"/>
+      </inertial>
+    </link>
 
-        <link name="${prefix}small_wheel_3_link">
-            <!--visual>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </visual-->     
-            <collision>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <geometry>
-                <cylinder length="${small_wheel_height}" radius="${small_wheel_radius}" />
-              </geometry>
-            </collision>
-            <inertial>
-              <mass value="${small_wheel_mass}"/>
-              <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-              <solid_cylinder_inertia  m="${small_wheel_mass}" r="${small_wheel_radius}" h="${small_wheel_height}"/>
-            </inertial>
-        </link>
+    <joint name="${prefix}small_wheel_4_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}small_wheel_4_link"/>
+      <xacro:if value="${reflect}">
+        <origin xyz="-0.23515 ${y_origin} 0.03979" rpy="0 0 0"/>
+      </xacro:if>
+      <xacro:unless value="${reflect}">
+        <origin xyz="0.23515 ${y_origin} 0.03979" rpy="0 0 0"/>
+      </xacro:unless>            
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="100" velocity="100"/>
+      <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_mid_wheel}" offset="0" />
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
 
-        <xacro:wheel_transmission prefix="${prefix}"/>
-        <xacro:wheel_gazebo prefix="${prefix}"/>
-        <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}slave_wheel_joint" multiplier="${multiplier}"/>
+    <!-- R6: Sixth link is the front pulley -->
+    <link name="${prefix}small_wheel_4_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/midium_pulley.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rising_description/meshes/flippers/midium_pulley.stl"/>
+        </geometry>
+      </collision>
+      <!--collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder length="${slave_wheel6_height}" radius="${slave_wheel6_radius}" />
+        </geometry>
+      </collision-->
+      <inertial>
+        <mass value="${slave_wheel6_mass}"/>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <solid_cylinder_inertia  m="${slave_wheel6_mass}" r="${slave_wheel6_radius}" h="${slave_wheel6_height}"/>
+      </inertial>
+    </link>
+
+    <xacro:wheel_transmission prefix="${prefix}"/>
+    <xacro:wheel_gazebo prefix="${prefix}"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_1_joint" multiplier="${multiplier_small_wheel}"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_2_joint" multiplier="${multiplier_small_wheel}"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_3_joint" multiplier="${multiplier_small_wheel}"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_4_joint" multiplier="${multiplier_mid_wheel}"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_joint" multiplier="${multiplier_small_wheel}"/>
+  
 
     </xacro:macro>      
 
