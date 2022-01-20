@@ -16,9 +16,9 @@
 	<xacro:property name="lenght_on_y" value="0.65"/>
 	<xacro:property name="lenght_on_z" value="0.196"/>
 
-	<xacro:property name="y_origin" value="0.274"/>
+	<xacro:property name="y_origin" value="0.278"/>
 
-    <xacro:macro name="front_flipper" params="prefix parent *origin hq">
+    <xacro:macro name="front_flipper" params="prefix parent *origin">
     
         <joint name="${prefix}flipper_joint" type="continuous">
             <parent link="${parent}"/>
@@ -31,43 +31,17 @@
         
         <link name="${prefix}flipper_link">
             <visual>
-                <xacro:if value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
-                    <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/front_flippers_final.dae"/>
-                    </geometry>
-                </xacro:if>
-                <xacro:unless value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
-                    <!-- change geometry if hq!=true -->
-                    <geometry>           
-                        <cylinder length="${front_flipper_height}" radius="${front_flipper_radius}"/>
-                    </geometry>      
-                </xacro:unless>
-            </visual>
-
-            <collision>
-              <xacro:if value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
-                    <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/collision_front_flippers_final.dae" scale="0.001 0.001 0.001"/>
-                    </geometry>
-                </xacro:if>
-                <xacro:unless value="${hq}">
-                    <origin xyz="0 0 0" rpy="0 0 0"/>
-                    <!-- change geometry if hq!=true -->
-                    <geometry>           
-                        <cylinder length="${front_flipper_height}" radius="${front_flipper_radius}"/>
-                    </geometry>      
-                </xacro:unless>
-
-                <!-- origin xyz="0 0 0" rpy="0 0 0"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                   <mesh filename="package://rising_description/meshes/flippers/collision_front_flippers.dae" />
-                    <!- - <cylinder length="${front_flipper_height}" radius="${front_flipper_radius}" />- ->
-                </geometry-->
-            </collision>
-
+                    <mesh filename="package://rising_description/meshes/flippers/front_flipper.stl"/>
+                </geometry>
+            </visual>
+            <!--collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://rising_description/meshes/flippers/front_flipper.stl"/>
+                </geometry>
+            </collision-->
             <inertial>
                 <mass value="${front_flipper_mass}"/>
                 <origin xyz="0.11 0 0"/>
@@ -75,9 +49,8 @@
             </inertial> 
         </link>
 
-        <xacro:wheel prefix="${prefix}left_" parent="${prefix}flipper_link" y_origin="${y_origin}" reflect="false" hq="${hq}"/>
-
-        <xacro:wheel prefix="${prefix}right_" parent="${prefix}flipper_link" y_origin="-${y_origin}" reflect="false" hq="${hq}"/>
+        <xacro:wheel prefix="${prefix}left_" parent="${prefix}flipper_link" y_origin="${y_origin}" reflect="false"/>
+        <xacro:wheel prefix="${prefix}right_" parent="${prefix}flipper_link" y_origin="-${y_origin}" reflect="false"/>
 
         <xacro:flipper_transmission prefix="${prefix}"/>
         <xacro:front_flipper_gazebo prefix="${prefix}"/>
