@@ -20,13 +20,12 @@
 
     <xacro:macro name="front_flipper" params="prefix parent *origin">
     
-        <joint name="${prefix}flipper_joint" type="continuous">
+        <joint name="${prefix}flipper_joint" type="revolute">
             <parent link="${parent}"/>
             <child link="${prefix}flipper_link"/>
             <xacro:insert_block name="origin"/>
             <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="10"/>
-            <joint_properties damping="0.5" friction="0.5"/>
+            <limit lower="-3" upper="3" velocity="1.0" effort="10"/>
         </joint>
         
         <link name="${prefix}flipper_link">
