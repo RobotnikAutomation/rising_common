@@ -10,17 +10,17 @@
   <!-- Pulleys -->
 	<xacro:property name="master_wheel_radius" value="0.09256"/> 
 	<xacro:property name="master_wheel_width" value="0.047"/>
-  <xacro:property name="master_wheel_mass" value="1"/><!-- in kg-->
+  <xacro:property name="master_wheel_mass" value="5"/><!-- in kg-->
 
   <xacro:property name="slave_wheel2345_radius" value="0.04148"/> 
 	<xacro:property name="slave_wheel2345_height" value="0.047"/>
-  <xacro:property name="slave_wheel2345_mass" value="0.5"/> <!-- in kg-->
+  <xacro:property name="slave_wheel2345_mass" value="5"/> <!-- in kg-->
 
-  <xacro:property name="slave_wheel6_radius" value="0.053205"/> 
-	<xacro:property name="slave_wheel6_height" value="0.047"/>
-  <xacro:property name="slave_wheel6_mass" value="0.1"/> <!-- in kg-->
+  <xacro:property name="mid_wheel_radius" value="0.053205"/> 
+	<xacro:property name="mid_wheel_width" value="0.047"/>
+  <xacro:property name="mid_wheel_mass" value="5"/> <!-- in kg-->
 
- 	<xacro:property name="multiplier_mid_wheel" value="${master_wheel_radius/slave_wheel6_radius}"/>
+ 	<xacro:property name="multiplier_mid_wheel" value="${master_wheel_radius/mid_wheel_radius}"/>
   <xacro:property name="multiplier_small_wheel" value="${master_wheel_radius/slave_wheel2345_radius}"/>
 
   <xacro:macro name="wheel" params="prefix parent y_origin reflect">
@@ -29,7 +29,7 @@
       <child link="${prefix}master_wheel_link"/>
       <origin xyz="0 ${y_origin} 0" rpy="0 0 0"/>
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
 
@@ -62,7 +62,7 @@
 
     <joint name="${prefix}small_wheel_joint" type="continuous">
       <parent link="${parent}"/>
-      <child link="${prefix}slave_wheel_link"/>
+      <child link="${prefix}small_wheel_link"/>
       <xacro:if value="${reflect}">
         <origin xyz="0.08227 ${y_origin} -0.08227" rpy="0 0 0"/>
       </xacro:if>
@@ -70,13 +70,13 @@
         <origin xyz="-0.08227 ${y_origin} -0.08227" rpy="0 0 0"/>
       </xacro:unless>
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
 
     <!-- R2: Second link is the down-inside pulley -->
-    <link name="${prefix}slave_wheel_link"> 
+    <link name="${prefix}small_wheel_link"> 
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
@@ -112,7 +112,7 @@
         <origin xyz="-0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
       </xacro:unless>            
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
@@ -154,7 +154,7 @@
         <origin xyz="0.03 ${y_origin} -0.11242" rpy="0 0 0"/>
       </xacro:unless>            
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
@@ -196,7 +196,7 @@
         <origin xyz="0.09 ${y_origin} -0.11242" rpy="0 0 0"/>
       </xacro:unless>            
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_small_wheel}" offset="0" />
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
@@ -228,9 +228,9 @@
       </inertial>
     </link>
 
-    <joint name="${prefix}small_wheel_4_joint" type="continuous">
+    <joint name="${prefix}mid_wheel_joint" type="continuous">
       <parent link="${parent}"/>
-      <child link="${prefix}small_wheel_4_link"/>
+      <child link="${prefix}mid_wheel_link"/>
       <xacro:if value="${reflect}">
         <origin xyz="-0.23515 ${y_origin} 0.03979" rpy="0 0 0"/>
       </xacro:if>
@@ -238,13 +238,13 @@
         <origin xyz="0.23515 ${y_origin} 0.03979" rpy="0 0 0"/>
       </xacro:unless>            
       <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
+      <limit effort="10" velocity="10"/>
       <mimic joint="{prefix}master_wheel_joint" multiplier="${multiplier_mid_wheel}" offset="0" />
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
 
     <!-- R6: Sixth link is the front pulley -->
-    <link name="${prefix}small_wheel_4_link">
+    <link name="${prefix}mid_wheel_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
@@ -264,21 +264,20 @@
         </geometry>
       </collision-->
       <inertial>
-        <mass value="${slave_wheel6_mass}"/>
+        <mass value="${mid_wheel_mass}"/>
         <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
-        <solid_cylinder_inertia  m="${slave_wheel6_mass}" r="${slave_wheel6_radius}" h="${slave_wheel6_height}"/>
+        <solid_cylinder_inertia  m="${mid_wheel_mass}" r="${mid_wheel_radius}" h="${mid_wheel_width}"/>
       </inertial>
     </link>
 
-    <xacro:wheel_transmission prefix="${prefix}"/>
-    <xacro:wheel_gazebo prefix="${prefix}"/>
+    <xacro:wheel_transmission prefix="${prefix}master_wheel_"/>
+    <xacro:wheel_gazebo prefix="${prefix}master_wheel_"/>
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_joint" multiplier="${multiplier_small_wheel}"/>
     <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_1_joint" multiplier="${multiplier_small_wheel}"/>
     <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_2_joint" multiplier="${multiplier_small_wheel}"/>
     <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_3_joint" multiplier="${multiplier_small_wheel}"/>
-    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_4_joint" multiplier="${multiplier_mid_wheel}"/>
-    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}small_wheel_joint" multiplier="${multiplier_small_wheel}"/>
-  
-
-    </xacro:macro>      
+    <xacro:mimic_joint_plugin_gazebo prefix="${prefix}" parent_joint="${prefix}master_wheel_joint" mimic_joint="${prefix}mid_wheel_joint" multiplier="${multiplier_mid_wheel}"/>
+    
+  </xacro:macro>      
 
 </robot>

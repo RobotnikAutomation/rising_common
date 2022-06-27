@@ -2,19 +2,18 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro name="wheel_gazebo" params="prefix">
-        <gazebo reference="${prefix}_wheel_link">
-            <mu1 value="10000"/>
-			      <mu2 value="10000"/>
-			      <kp value="10000000.0" />
+        <gazebo reference="${prefix}link">
+            <mu1 value="100.0"/>
+			      <mu2 value="100.0"/>
+ 			      <kp value="10000000.0" />
 			      <kd value="1.0" />
 		      	<fdir1 value="1 0 0"/>
-			<material>Gazebo/Yellow</material>
-            <turnGravityOff>false</turnGravityOff>
+			      <material>Gazebo/Yellow</material>
         </gazebo>
     </xacro:macro>
 
     <!-- Gazebo Mimic Joints Plugin -->
-  <xacro:macro name="mimic_joint_plugin_gazebo" params="prefix parent_joint mimic_joint has_pid:=false multiplier:=1 offset:=0 sensitiveness:=0.0 max_effort:=1.0 robot_namespace:=''">
+  <xacro:macro name="mimic_joint_plugin_gazebo" params="prefix parent_joint mimic_joint has_pid:=false multiplier offset:=0 sensitiveness:=0.0 max_effort:=1.0 robot_namespace:=''">
     <gazebo>
       <plugin name="${prefix}mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
         <joint>${parent_joint}</joint>
