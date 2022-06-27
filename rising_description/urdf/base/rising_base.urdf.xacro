@@ -4,7 +4,7 @@
 
 <xacro:include filename="$(find rising_description)/urdf/inertia.urdf.xacro" />
 
-    <xacro:macro name="rising_base" params="prefix publish_bf hq">
+    <xacro:macro name="rising_base" params="prefix">
     <!--<xacro:property name="flippers_width" value="0.1"/> -->
 
         <!-- Robot mechanical and motor parameters -->
@@ -33,16 +33,9 @@
             </inertial>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
-                <xacro:if value="${hq}">
-                    <geometry>
-                        <mesh filename="package://rising_description/meshes/base/rising_base_final.dae"/>
-                    </geometry>
-                </xacro:if>
-                <xacro:unless value="${hq}">
-                    <geometry>
-                        <mesh filename="package://rising_description/meshes/base/rising_base_final.stl"/>
-                    </geometry>
-                </xacro:unless>
+                <geometry>
+                    <mesh filename="package://rising_description/meshes/base/rising_base_final.dae"/>
+                </geometry>
                 <material name="dark_grey">
 			        <color rgba="0.4 0.4 0.4 1.0"/>
                 </material>
