@@ -1,42 +1,42 @@
+wheel_test_fl_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)front_left_small_wheel_joint
+
+wheel_test_fr_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)front_right_small_wheel_joint
+
+wheel_test_bl_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)back_left_small_wheel_joint
+
+wheel_test_br_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)back_right_small_wheel_joint
+
 front_flipper_joint_controller:
   type: position_controllers/JointPositionController
   joint: $(arg prefix)front_flipper_joint
-
-front_left_master_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)front_left_master_wheel_joint
-
-front_left_slave_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)front_left_slave_wheel_joint
-
-front_right_master_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)front_right_master_wheel_joint
-
-front_right_slave_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)front_right_slave_wheel_joint
 
 back_flipper_joint_controller:
   type: position_controllers/JointPositionController
   joint: $(arg prefix)back_flipper_joint
 
+front_left_master_wheel_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)front_left_master_wheel_joint
+
+front_right_master_wheel_joint_controller:
+  type: velocity_controllers/JointVelocityController
+  joint: $(arg prefix)front_right_master_wheel_joint
+
 back_left_master_wheel_joint_controller:
   type: velocity_controllers/JointVelocityController
   joint: $(arg prefix)back_left_master_wheel_joint
 
-back_left_slave_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)back_left_slave_wheel_joint
-
 back_right_master_wheel_joint_controller:
   type: velocity_controllers/JointVelocityController
   joint: $(arg prefix)back_right_master_wheel_joint
-
-back_right_slave_wheel_joint_controller:
-  type: velocity_controllers/JointVelocityController
-  joint: $(arg prefix)back_right_slave_wheel_joint
 
 joint_read_state_controller:
     type: joint_state_controller/JointStateController 
@@ -46,16 +46,47 @@ joint_read_command_controller:
     type: joint_read_command_controller/JointReadCommandController 
     publish_rate: 100.0
 
+robotnik_base_control:
+  type: summit_xl_controller/SummitXLController
+  joint:
+    front_right_wheel_joint:
+      name: robot_front_right_master_wheel_joint
+      max_speed: 27.27 # rad/s
+    front_left_wheel_joint:
+      name: robot_front_left_master_wheel_joint
+      max_speed: 27.27 # rad/s
+    back_right_wheel_joint:
+      name: robot_back_right_master_wheel_joint
+      max_speed: 27.27 # rad/s
+    back_left_wheel_joint:
+      name: robot_back_left_master_wheel_joint
+      max_speed: 27.27 # rad/s
+  linear_speed_limit: 1.5 # m/s
+  linear_acceleration_limit: 0.6 # m/s^2
+  angular_speed_limit: 3 # rad/s
+  angular_acceleration_limit: 1.5 # rad/s^2
+  odom_frame: robot_odom
+  robot_base_frame: robot_base_footprint
+  odom_broadcast_tf: true
+  odom_topic: 'robotnik_base_control/odom'
+  wheel_base: 0.2
+  track_width: 0.3
+  wheel_diameter: 0.2
+  cmd_watchdog_duration: 0.5
+  imu_watchdog_duration: 0.1
+  imu_topic: imu/data
+  odom_publish_frequency: 100
+  cmd_vel        : 'robotnik_base_control/cmd_vel'
+  kinematic_mode : differential
+  motion_odometry: false
+  in_motion_timer: 2.0
+
 # Settings for ros_control hardware interface
 hardware_interface:
   joints:
      - $(arg prefix)front_flipper_joint
      - $(arg prefix)back_flipper_joint
      - $(arg prefix)front_left_master_wheel_joint
-     - $(arg prefix)front_left_slave_wheel_joint
-     - $(arg prefix)front_right_master_wheel_joint
      - $(arg prefix)front_right_master_wheel_joint     
      - $(arg prefix)back_left_master_wheel_joint
-     - $(arg prefix)back_left_slave_wheel_joint
      - $(arg prefix)back_right_master_wheel_joint
-     - $(arg prefix)back_right_master_wheel_joint 
