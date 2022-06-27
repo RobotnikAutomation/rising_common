@@ -61,7 +61,7 @@
 		<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
 		<!-- Rising base -->
-		<xacro:rising_base prefix="$(arg prefix)" publish_bf="${publish_bf}" hq="${hq}" />
+		<xacro:rising_base prefix="$(arg prefix)"/>
 
         <!-- Flippers -->
   		<xacro:front_flipper prefix="$(arg prefix)front_" parent="$(arg prefix)base_link">
@@ -74,7 +74,7 @@
   		</xacro:back_flipper>
 
         <!-- Arm -->
-        <xacro:if value="${has_arm}"> 
+        <!--xacro:if value="${has_arm}"> 
 	        <xacro:load_arm prefix="${prefix}arm_" dof="6" vision="180" parent="${prefix}base_link">
                 <origin xyz="0 0 0" rpy="0 0 0"/>
             </xacro:load_arm>
@@ -86,7 +86,7 @@
             </joint>
     
             <xacro:load_gazebo_arm_transmissions prefix="${prefix}arm_"/>
-        </xacro:if>
+        </xacro:if-->
 
         <!-- Gripper -->
         <!--xacro:if value="${has_gripper}">
@@ -98,10 +98,9 @@
 	    </xacro:if-->
     
         <!-- Sensors -->
-        <xacro:sensor_rs_bpearl prefix="${prefix}rsbpearl" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
+        <!--xacro:sensor_rs_bpearl prefix="${prefix}rsbpearl" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
             <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
-        </xacro:sensor_rs_bpearl>
-
+        </xacro:sensor_rs_bpearl-->
     </xacro:macro>
 
 
