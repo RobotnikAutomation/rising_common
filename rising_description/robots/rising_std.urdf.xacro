@@ -17,12 +17,12 @@
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
 
 	 <!-- Include KINOVA GEN3 ARM -->
-	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_macro.xacro" />
-	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_transmission_macro.xacro" />
+	<!--xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_macro.xacro" />
+	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_transmission_macro.xacro" /-->
 
 	<!-- Include KINOVA GEN3 GRIPPER -->
-	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_macro.xacro" />
-	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_transmission_macro.xacro" />
+	<!--xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_macro.xacro" />
+	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_transmission_macro.xacro" /-->
 
 
 	<xacro:property name="PI" value="3.1415926535897931"/>
@@ -37,7 +37,7 @@
     <xacro:property name="publish_bf" value="true"/>
     <xacro:arg name="prefix" default="rising_"/>
 	<xacro:arg name="has_arm" default="false"/>
-	<xacro:arg name="has_gripper" default="true"/>
+	<xacro:arg name="has_gripper" default="false"/>
 
 
     <xacro:property name="arm_position_x" value="0.0"/>
@@ -66,11 +66,11 @@
 		<xacro:rising_base prefix="$(arg prefix)" publish_bf="${publish_bf}" hq="${hq}" />
 
   		<xacro:front_flipper prefix="$(arg prefix)front_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
+  			<origin xyz="${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 -1.57 0"/>
   		</xacro:front_flipper>
 
   		<xacro:back_flipper prefix="$(arg prefix)back_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 0 0"/>
+  			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 1.57 0"/>
   		</xacro:back_flipper>
 
  <!-- KINOVA GEN3 ARM -->
@@ -98,9 +98,22 @@
 		</xacro:if>
 
 <!-- LIDAR -->
-        <xacro:sensor_rs_bpearl prefix="${prefix}" parent="${prefix}base_link" prefix_topic="lidar" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
+        <xacro:sensor_rs_bpearl prefix="${prefix}front_3d_laser" parent="${prefix}base_link" prefix_topic="front_3d_laser" range_min="0.1" range_max="90" hfov="360" samples="1200" vfov="90.0" lasers="32" fps="15" gpu="false" >
            <origin xyz="0.27894 0 0.20667" rpy="0 ${M_PI/4} 0"/>
         </xacro:sensor_rs_bpearl>
+
+<!-- CAMERAS -->
+        <xacro:sensor_intel_d435 prefix="${prefix}front_rgbd_camera" parent="${prefix}base_link" prefix_topic="front_rgbd_camera" use_nominal_extrinsics="true" >
+           <origin xyz="0.408 0 0.00225" rpy="0 0 0"/>
+        </xacro:sensor_intel_d435>
+        <xacro:sensor_intel_d435 prefix="${prefix}back_rgbd_camera" parent="${prefix}base_link" prefix_topic="back_rgbd_camera" use_nominal_extrinsics="true">
+           <origin xyz="-0.408 0 0.0023" rpy="0 0 3.14"/>
+        </xacro:sensor_intel_d435>
+
+
+<xacro:sensor_imu_hector prefix="$(arg prefix)imu" parent="$(arg prefix)base_link">
+		<origin xyz="0.07136 0.0365 0.2711" rpy="0 0 0"/>
+	</xacro:sensor_imu_hector>
 
    </xacro:macro>
 

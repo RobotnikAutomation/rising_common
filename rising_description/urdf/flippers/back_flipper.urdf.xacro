@@ -25,7 +25,7 @@
             <child link="${prefix}flipper_link"/>
             <xacro:insert_block name="origin"/>
             <axis xyz="0 1 0" rpy="0 0 0"/>
-            <limit effort="100" velocity="10"/>
+            <limit effort="100" velocity="100"/>
             <joint_properties damping="0.5" friction="0.5"/>
         </joint>
         
@@ -34,7 +34,7 @@
                 <xacro:if value="${hq}">
                     <origin xyz="0 0 0" rpy="0 0 0"/>
                     <geometry>
-                        <mesh filename="package://rising_description/meshes/flippers/back_flippers_final.dae"/>
+                        <mesh filename="package://rising_description/meshes/flippers/back_flippers.dae"/>
                     </geometry>
                 </xacro:if>
                 <xacro:unless value="${hq}">
