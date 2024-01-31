@@ -17,12 +17,12 @@
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
 
 	 <!-- Include KINOVA GEN3 ARM -->
-	<!--xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_macro.xacro" />
-	<xacro:include filename="$(find kortex_description)/arms/gen3/6dof/urdf/gen3_transmission_macro.xacro" /-->
+	<xacro:include filename="$(find kortex_description)/arms/gen3/7dof/urdf/gen3_macro.xacro" />
+	<xacro:include filename="$(find kortex_description)/arms/gen3/7dof/urdf/gen3_transmission_macro.xacro" />
 
 	<!-- Include KINOVA GEN3 GRIPPER -->
-	<!--xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_macro.xacro" />
-	<xacro:include filename="$(find kortex_description)/grippers/gen3_lite_2f/urdf/gen3_lite_2f_transmission_macro.xacro" /-->
+	<xacro:include filename="$(find kortex_description)/grippers/robotiq_2f_85/urdf/robotiq_2f_85_macro.xacro" />
+	<xacro:include filename="$(find kortex_description)/grippers/robotiq_2f_85/urdf/robotiq_2f_85_transmission_macro.xacro" />
 
 
 	<xacro:property name="PI" value="3.1415926535897931"/>
@@ -75,7 +75,7 @@
 
  <!-- KINOVA GEN3 ARM -->
         <xacro:if value="${has_arm}"> 
-	        <xacro:load_arm prefix="${prefix}arm_" dof="6" vision="180" parent="${prefix}base_link">
+	        <xacro:load_arm prefix="${prefix}arm_" dof="7" vision="180" parent="${prefix}base_link">
                 <origin xyz="0 0 0" rpy="0 0 0"/>
             </xacro:load_arm>
 			        
@@ -90,10 +90,10 @@
 
 <!-- KINOVA GEN3 GRIPPER -->
         <xacro:if value="${has_gripper}">
-            <xacro:load_gripper prefix="${prefix}" parent="${prefix}arm_end_effector_link">
+            <xacro:load_gripper prefix="${prefix}arm_" parent="${prefix}arm_end_effector_link">
             </xacro:load_gripper>
 
-        <xacro:load_gazebo_gripper_transmissions prefix="${prefix}"/>
+        <xacro:load_gazebo_gripper_transmissions prefix="${prefix}arm_"/>
 
 		</xacro:if>
 
