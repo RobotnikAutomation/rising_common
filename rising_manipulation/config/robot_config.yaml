@@ -1,0 +1,31 @@
+#Move_group node parameters 
+group_name: arm
+move_group_timeout: 500 
+
+#Publish tf scene_manager
+publish_tf: true
+
+#Robot setup
+end_effector_link: robot_arm_end_effector_link
+robot_base_link: robot_base_footprint
+
+#MoveIt warehouse parameters 
+host: "localhost"
+port: 33829
+
+#Crate description parameters
+crate:
+  length: 0.6
+  width: 0.4
+  height: 0.14
+
+#MoveIt constraint
+moveit_constraint: "" #Motion planning constraint to be used
+
+#Mode
+simulation: true 
+
+#Moveit velocity
+scale_vel: 1
+scale_acc: 1
+

@@ -1,0 +1,28 @@
+#### ACTIONS 
+
+###### move_to ("pc_tower_detection")
+
+/robot/component_sorting/move_to/cancel
+/robot/component_sorting/move_to/feedback
+/robot/component_sorting/move_to/goal
+/robot/component_sorting/move_to/result
+
+###### pickup_from ("psu" "cooler")
+/robot/component_sorting/pickup_from/cancel
+/robot/component_sorting/pickup_from/feedback
+/robot/component_sorting/pickup_from/goal
+/robot/component_sorting/pickup_from/result
+
+###### place_on ("psu" "cooler")
+/robot/component_sorting/place_on/cancel
+/robot/component_sorting/place_on/feedback
+/robot/component_sorting/place_on/goal
+/robot/component_sorting/place_on/result
+
+---
+
+#### SERVICES
+
+###### Pause (0.0001) Resume (1)
+/robot/arm/ur_hardware_interface/set_speed_slider
+

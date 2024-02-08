@@ -1,0 +1,83 @@
+objects:
+#  - icf_crates
+ - table
+
+
+icf_crates:
+  spawn: true
+  static: false
+  frame_id: base_link # moveit frame id
+  geometry:
+    box:
+      length: 1.2
+      width: 0.8
+      height: 0.8
+  pose: [[0.0,1.4,0.30],[0,0,0]] # xyz, rpy to  moveit's frame_id 
+  layout: 
+    x: 1
+    y: 1 # 2
+    z: 2    
+
+crates_destack:
+  spawn: true
+  static: false
+  frame_id: base_link # moveit frame id
+  geometry:
+    box:
+      length: 0.6
+      width: 0.4
+      height: 0.14
+  pose: [[0.7,1.6,0.46],[0,0,1.5708]] # xyz, rpy to  moveit's frame_id 
+  layout: 
+    x: 2
+    y: 2 # 2
+    z: 7    
+
+crates_stack:
+  spawn: true
+  static: false
+  frame_id: base_link # moveit frame id
+  geometry:
+    box:
+      length: 0.6
+      width: 0.4
+      height: 0.14
+  pose: [[-0.7,1.6,0.46],[0,0,1.5708]] # xyz, rpy to  moveit's frame_id 
+  layout: 
+    x: 2
+    y: 2 # 2
+    z: 10        
+
+table:
+  spawn: true
+  static: true
+  frame_id: robot_base_footprint # moveit frame id
+  geometry:
+    box:
+      length: 1.0
+      width: 0.80
+      height: 0.30
+  pose: [[0.0,-1.40,0.0],[0.0,0.0,0.0]] # xyz, rpy to  moveit's frame_id 
+
+pallet_stack:
+  spawn: true
+  static: true
+  frame_id: base_link # moveit frame id
+  geometry:
+    box:
+      length: 1.20
+      width: 0.80
+      height: 0.14
+  pose: [[-0.7,1.6,0.32],[0.0,0.0,1.5708]] # xyz, rpy to  moveit's frame_id 
+
+pallet_destack:
+  spawn: true
+  static: true
+  frame_id: base_link # moveit frame id
+  geometry:
+    box:
+      length: 1.20
+      width: 0.80
+      height: 0.14
+  pose: [[0.7,1.6,0.32],[0.0,0.0,1.5708]] # xyz, rpy to  moveit's frame_id 
+

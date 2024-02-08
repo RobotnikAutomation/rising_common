@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="arm_name" default="my_gen3"/>
+
+    <group ns = "$(arg arm_name)">
+        <node name="rising_manipulation_app" pkg="rising_manipulation" type="manipulation_app_node" output="screen" clear_params="true">
+            <rosparam command="load" file="$(find rising_manipulation)/config/objects_config.yaml" />
+            <rosparam command="load" file="$(find rising_manipulation)/config/robot_config.yaml" />
+            <remap from="/get_planning_scene" to="/$(arg arm_name)/get_planning_scene" />
+            <remap from="/apply_planning_scene" to="/$(arg arm_name)/apply_planning_scene" />
+            <remap from="/move_group/monitored_planning_scene" to="/$(arg arm_name)/move_group/monitored_planning_scene" />
+        </node>
+    </group>
+    
+</launch>
