@@ -31,6 +31,11 @@
                 <parent link="${prefix}base_footprint"/>
                 <child link="${prefix}base_link"/>
             </joint> 
+            <joint name="${prefix}cover_joint" type="fixed">
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <parent link="${prefix}base_footprint"/>
+                <child link="${prefix}cover_link"/>
+            </joint> 
         </xacro:if>
 
         <!-- BASE_LINK -->
@@ -60,6 +65,37 @@
                 <origin xyz="0 0 0" rpy="0 0 0 "/>
 		        <geometry>
 			        <mesh filename="package://rising_description/meshes/base/rising_base_final.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <!-- COVER LINK -->
+        <link name="${prefix}cover_link">
+            <inertial>
+                <mass value="1"/>
+                <origin xyz="0 0 0.29"/>
+                <solid_cuboid_inertia w="${lenght_on_x}" h="${lenght_on_y}" d="0.10" m="1"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${PI/2}"/>
+                <xacro:if value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_joroba.stl"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:unless value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_joroba.stl"/>
+                    </geometry>
+                </xacro:unless>
+                <material name="dark_grey">
+			        <color rgba="0.4 0.4 0.4 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${PI/2}"/>
+		        <geometry>
+			        <mesh filename="package://rising_description/meshes/base/rising_joroba.stl"/>
                 </geometry>
             </collision>
         </link>
