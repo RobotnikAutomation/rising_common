@@ -36,6 +36,11 @@
                 <parent link="${prefix}base_footprint"/>
                 <child link="${prefix}cover_link"/>
             </joint> 
+            <joint name="${prefix}arm_support_struct_joint" type="fixed">
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <parent link="${prefix}base_footprint"/>
+                <child link="${prefix}arm_support_struct_link"/>
+            </joint> 
         </xacro:if>
 
         <!-- BASE_LINK -->
@@ -77,7 +82,7 @@
                 <solid_cuboid_inertia w="${lenght_on_x}" h="${lenght_on_y}" d="0.10" m="1"/>
             </inertial>
             <visual>
-                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${PI/2}"/>
+                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${-PI/2}"/>
                 <xacro:if value="${hq}">
                     <geometry>
                         <mesh filename="package://rising_description/meshes/base/rising_joroba.stl"/>
@@ -93,9 +98,40 @@
                 </material>
             </visual>
             <collision>
-                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${PI/2}"/>
+                <origin xyz="0 0 0.29" rpy="${PI/2} 0 ${-PI/2}"/>
 		        <geometry>
 			        <mesh filename="package://rising_description/meshes/base/rising_joroba.stl"/>
+                </geometry>
+            </collision>
+        </link>
+               
+        <!-- ARM SUPPORT STRUCTURE -->
+        <link name="${prefix}arm_support_struct_link">
+            <inertial>
+                <mass value="1"/>
+                <origin xyz="-0.3228 0 0.21315"/>
+                <solid_cuboid_inertia w="0.10" h="0.10" d="0.10" m="1"/>
+            </inertial>
+            <visual>
+                <origin xyz="-0.3228 0 0.21315" rpy="0 0 0"/>
+                <xacro:if value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_kinova_support.stl"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:unless value="${hq}">
+                    <geometry>
+                        <mesh filename="package://rising_description/meshes/base/rising_kinova_support.stl"/>
+                    </geometry>
+                </xacro:unless>
+                <material name="dark_grey">
+			        <color rgba="0.4 0.4 0.4 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="-0.3228 0 0.21315" rpy="0 0 0"/>
+		        <geometry>
+			        <mesh filename="package://rising_description/meshes/base/rising_kinova_support.stl"/>
                 </geometry>
             </collision>
         </link>

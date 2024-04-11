@@ -28,7 +28,7 @@
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
 	<!-- Flipper parameters -->
-	<xacro:property name="flipper_offset_x" value="0.27455" />    <!-- x,y,z in translation from base_link to the center of the flippers -->
+	<xacro:property name="flipper_offset_x" value="0.31455" />    <!-- x,y,z in translation from base_link to the center of the flippers -->
     <xacro:property name="flipper_offset_y" value="0.0" />
 	<xacro:property name="flipper_offset_z" value="0.00" /> 
 
@@ -45,7 +45,7 @@
     <xacro:property name="arm_position_z" value="0.1835"/>
     <xacro:property name="arm_orientation_r" value="0"/>
     <xacro:property name="arm_orientation_p" value="0"/>
-    <xacro:property name="arm_orientation_y" value="0"/>
+    <xacro:property name="arm_orientation_y" value="${M_PI}"/>
 
 	<xacro:property name="gripper_position_x" value="0.0"/>
     <xacro:property name="gripper_position_y" value="0"/>
@@ -66,11 +66,11 @@
 		<xacro:rising_base prefix="$(arg prefix)" publish_bf="${publish_bf}" hq="${hq}" />
 
   		<xacro:front_flipper prefix="$(arg prefix)front_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 -1.57 0"/>
+  			<origin xyz="${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 -3.14 0"/>
   		</xacro:front_flipper>
 
   		<xacro:back_flipper prefix="$(arg prefix)back_" parent="$(arg prefix)base_link" hq="${hq}">
-  			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 1.57 0"/>
+  			<origin xyz="-${flipper_offset_x} -${flipper_offset_y} ${flipper_offset_z}" rpy="0 3.14 0"/>
   		</xacro:back_flipper>
 
  <!-- KINOVA GEN3 ARM -->
