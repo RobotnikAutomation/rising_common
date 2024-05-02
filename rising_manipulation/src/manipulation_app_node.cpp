@@ -8,7 +8,8 @@ int main(int argc, char **argv)
   ManipulationApp ma(n);
   ma.asyncStart();
 
-//  ros::Duration(10).sleep();
-//  cs.gripper_on();
-  ros::spin();
+  ros::AsyncSpinner spinner(8);
+
+  spinner.start();
+  ros::waitForShutdown();
 }

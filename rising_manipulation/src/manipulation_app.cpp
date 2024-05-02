@@ -76,6 +76,7 @@ int ManipulationApp::rosSetup()
     RCOMPONENT_ERROR("Cannot create move group with group name: %s. Is MoveIt running? Group name is correct?",
                      group_name_.c_str());
     RCOMPONENT_ERROR_STREAM("Exception: " << e.what());
+    ros::shutdown();
     return rcomponent::ERROR;
   }
 
@@ -210,7 +211,8 @@ void ManipulationApp::readyState()
 
   ROS_INFO_THROTTLE(3, "I have a new goal!");
 
-  if(move_to_as_->isActive() == true && thread_active_flag_ == false){
+  if(move_to_as_->isActive() == true && thread_active_flag_ == false)
+  {
     thread_active_flag_ = true;
     move_to_thread_= boost::thread(&ManipulationApp::move_to,this,move_to_goal_->to);
   }   
@@ -245,8 +247,7 @@ void ManipulationApp::preemptCB()
   move_group_->stop();
 
   if(move_to_as_->isActive()){
-    /* destack_crate_thread_.interrupt(); */
-    move_to_result_.success = true;
+    move_to_result_.success = false;
     move_to_result_.message = "Move to action preempted";
     move_to_as_->setPreempted(move_to_result_);
     move_to_thread_.join();
@@ -294,35 +295,33 @@ void ManipulationApp::move_to(std::string move_to_position)
     move_to_feedback_.state = "Plan to desired position computed";
     move_to_as_->publishFeedback(move_to_feedback_);
 
-    while(move_to_as_->isActive())
-    {
-      //Check if goal is active and move to goal
-      if (!move_to_as_->isActive()) return;
-      success_execute = (move_group_->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-      //Check if execute is successful
-      if(success_execute){
-        move_to_feedback_.state.clear();
-        move_to_feedback_.state = "Moved end-effector to desired position";
-        move_to_as_->publishFeedback(move_to_feedback_);
-
-        move_to_result_.success = true;
-        move_to_result_.message = "Move end-effector to desired position action: SUCCESSFUL";
-        move_to_as_->setSucceeded(move_to_result_);
-        action_finished_flag_ = true;
-        return;
-      }else{
-        move_to_result_.success = false;
-        move_to_result_.message = "Could not move end-effector to desired position";
-        move_to_as_->setAborted(move_to_result_);
-        thread_active_flag_ = false;
-        return;
-      }
-    }    
-
+    //Check if goal is active and move to goal
     if (!move_to_as_->isActive()) return;
-          
+    success_execute = (move_group_->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
+    //Check if execute is successful
+    if(success_execute){
+      if (!move_to_as_->isActive()) return;
+      move_to_feedback_.state.clear();
+      move_to_feedback_.state = "Moved end-effector to desired position";
+      move_to_as_->publishFeedback(move_to_feedback_);
+      ros::Duration(0.1).sleep();
+      move_to_result_.success = true;
+      move_to_result_.message = "Move end-effector to desired position action: SUCCESSFUL";
+      move_to_as_->setSucceeded(move_to_result_);
+      action_finished_flag_ = true;
+      return;
+    }else{
+      if (!move_to_as_->isActive()) return;
+      move_to_result_.success = false;
+      move_to_result_.message = "Could not move end-effector to desired position";
+      move_to_as_->setAborted(move_to_result_);
+      thread_active_flag_ = false;
+      return;
+    }     
   }else{
+    if (!move_to_as_->isActive()) return;
     move_to_result_.success = false;
     move_to_result_.message = "Could not plan to desired position";
     move_to_as_->setAborted(move_to_result_);
@@ -330,5 +329,4 @@ void ManipulationApp::move_to(std::string move_to_position)
     return;
   }
 
- 
 }

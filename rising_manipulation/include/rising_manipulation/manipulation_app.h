@@ -42,8 +42,8 @@
 // SCENE MANAGER
 #include "scene_manager/scene_manager.h"
 
-
-
+// MTC 
+#include <rising_manipulation/deep_pick_task.h>
 
 
 class ManipulationApp : public rcomponent::RComponent
@@ -139,6 +139,9 @@ protected:
   boost::thread move_to_thread_;
   bool thread_active_flag_;
   bool action_finished_flag_;
+
+  // MTC task
+  std::shared_ptr<rising_manipulation::DeepPickTask> deep_pick_task; 
 
 };
 

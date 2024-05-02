@@ -26,6 +26,6 @@ moveit_constraint: "" #Motion planning constraint to be used
 simulation: true 
 
 #Moveit velocity
-scale_vel: 1
-scale_acc: 1
+scale_vel: 0.8
+scale_acc: 0.8
 

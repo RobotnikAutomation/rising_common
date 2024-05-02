@@ -44,6 +44,8 @@
   <depend>moveit_visual_tools</depend>
   <depend>rviz_visual_tools</depend>
   <depend>rising_manipulation_msgs</depend>
+  <depend>moveit_task_constructor_core</depend>
+  <depend>moveit_task_constructor_msgs</depend>
   
 
   <!-- This package is referenced in the warehouse launch files, but does not build out of the box at the moment. Commented the dependency until this works. -->
