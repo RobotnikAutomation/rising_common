@@ -78,6 +78,8 @@
     <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
 
+    <remap from="joint_states" to="/robot/joint_state_publisher_complete/joint_states" />
+    
 <!--     <remap from="/joint_states" to="/my_gen3/joint_states" />
     <remap from="robot_description" to="/my_gen3/robot_description" />
     <remap from="robot_description_semantic" to="/my_gen3/robot_description_semantic" /> -->

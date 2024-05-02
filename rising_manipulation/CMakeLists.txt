@@ -21,6 +21,8 @@ find_package(catkin REQUIRED COMPONENTS
   rviz_visual_tools
   rcomponent
   rising_manipulation_msgs
+  moveit_task_constructor_core
+	moveit_task_constructor_msgs
 )
 
 catkin_package(
